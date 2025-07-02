@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo - Beauty Center</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Custom CSS -->
+    <link href="/css/styles.css" rel="stylesheet">
+    
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 0.25rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .main-content {
+            padding: 2rem;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .table-responsive {
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .booking-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d1ecf1; color: #0c5460; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 sidebar">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-spa text-white fs-1 mb-2"></i>
+                        <h5 class="text-white">Beauty Center</h5>
+                        <small class="text-white-50">Panel Admin</small>
+                    </div>
+                    
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard" data-section="dashboard">
+                                <i class="fas fa-chart-line me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#citas-hoy" data-section="citas-hoy">
+                                <i class="fas fa-calendar-day me-2"></i>Citas de Hoy
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#citas-semana" data-section="citas-semana">
+                                <i class="fas fa-calendar-week me-2"></i>Esta Semana
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#citas-mes" data-section="citas-mes">
+                                <i class="fas fa-calendar-alt me-2"></i>Este Mes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#buscar" data-section="buscar">
+                                <i class="fas fa-search me-2"></i>Buscar Reserva
+                            </a>
+                        </li>
+                        <li class="nav-item mt-3">
+                            <a class="nav-link" href="/" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>Ver Sitio Web
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
+                <!-- Dashboard Section -->
+                <div id="dashboard-content" class="content-section">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Dashboard</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button type="button" class="btn btn-outline-primary" onclick="refreshStats()">
+                                <i class="fas fa-sync-alt me-2"></i>Actualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row mb-4" id="statsCards">
+                        <!-- Las estadísticas se cargarán dinámicamente -->
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Acciones Rápidas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <button class="btn btn-primary-custom w-100" onclick="showSection('citas-hoy')">
+                                                <i class="fas fa-calendar-day me-2"></i>Ver Citas de Hoy
+                                            </button>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button class="btn btn-outline-primary w-100" onclick="showSection('buscar')">
+                                                <i class="fas fa-search me-2"></i>Buscar Reserva
+                                            </button>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button class="btn btn-outline-success w-100" onclick="exportData()">
+                                                <i class="fas fa-download me-2"></i>Exportar Datos
+                                            </button>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <a href="/" class="btn btn-outline-secondary w-100" target="_blank">
+                                                <i class="fas fa-eye me-2"></i>Ver Sitio Web
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Citas de Hoy Section -->
+                <div id="citas-hoy-content" class="content-section d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Citas de Hoy</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <input type="date" class="form-control me-2" id="selectedDate" onchange="loadDailyBookings()">
+                            <button type="button" class="btn btn-outline-primary" onclick="loadDailyBookings()">
+                                <i class="fas fa-sync-alt me-2"></i>Actualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="dailyBookingsContainer">
+                        <!-- Las citas se cargarán aquí -->
+                    </div>
+                </div>
+
+                <!-- Citas de la Semana Section -->
+                <div id="citas-semana-content" class="content-section d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Citas de la Semana</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button type="button" class="btn btn-outline-primary" onclick="loadWeeklyBookings()">
+                                <i class="fas fa-sync-alt me-2"></i>Actualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="weeklyBookingsContainer">
+                        <!-- Las citas se cargarán aquí -->
+                    </div>
+                </div>
+
+                <!-- Citas del Mes Section -->
+                <div id="citas-mes-content" class="content-section d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Citas del Mes</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <input type="month" class="form-control me-2" id="selectedMonth" onchange="loadMonthlyBookings()">
+                            <button type="button" class="btn btn-outline-primary" onclick="loadMonthlyBookings()">
+                                <i class="fas fa-sync-alt me-2"></i>Actualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="monthlyBookingsContainer">
+                        <!-- Las citas se cargarán aquí -->
+                    </div>
+                </div>
+
+                <!-- Buscar Reserva Section -->
+                <div id="buscar-content" class="content-section d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Buscar Reserva</h1>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Buscar por Código</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" id="searchCode" 
+                                               placeholder="Ingresa el código de reserva" 
+                                               onkeypress="handleSearchKeyPress(event)">
+                                        <button class="btn btn-primary-custom" onclick="searchBooking()">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="searchResults" class="mt-4">
+                        <!-- Los resultados se mostrarán aquí -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles de Reserva -->
+    <div class="modal fade" id="bookingDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles de la Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="bookingDetailsContent">
+                    <!-- Los detalles se cargarán aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" id="btnCompleteBooking" style="display: none;">
+                        <i class="fas fa-check me-2"></i>Marcar como Completada
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="/js/admin.js"></script>
+</body>
+</html> 

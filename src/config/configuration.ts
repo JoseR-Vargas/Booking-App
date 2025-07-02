@@ -5,11 +5,15 @@ export default () => ({
   },
   mercadopago: {
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
+    publicKey: process.env.MERCADOPAGO_PUBLIC_KEY || '',
   },
   email: {
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.EMAIL_PORT || '587', 10),
     user: process.env.EMAIL_USER || '',
     pass: process.env.EMAIL_PASS || '',
+  },
+  frontend: {
+    url: process.env.FRONTEND_URL || 'http://localhost:3000',
   },
 }); 

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Backend Connection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .success {
+            color: #28a745;
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .info {
+            color: #17a2b8;
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test Backend Connection</h1>
+        
+        <div class="controls">
+            <button class="btn" onclick="testConfig()">Test /config</button>
+            <button class="btn" onclick="testServices()">Test /bookings/services</button>
+            <button class="btn" onclick="testSlots()">Test /bookings/available-slots</button>
+            <button class="btn" onclick="testAll()">Test All</button>
+            <button class="btn" onclick="clearResults()">Clear</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000';
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = type;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong> - ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        async function testConfig() {
+            log('🔍 Testing /config endpoint...');
+            try {
+                const response = await fetch(`${API_BASE_URL}/config`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ /config endpoint working!', 'success');
+                    log(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+                } else {
+                    log(`❌ /config endpoint failed: ${response.status}`, 'error');
+                    log(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+                }
+            } catch (error) {
+                log(`❌ Error connecting to /config: ${error.message}`, 'error');
+            }
+        }
+
+        async function testServices() {
+            log('🔍 Testing /bookings/services endpoint...');
+            try {
+                const response = await fetch(`${API_BASE_URL}/bookings/services`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ /bookings/services endpoint working!', 'success');
+                    log(`Found ${data.data?.length || 0} services`);
+                    log(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+                } else {
+                    log(`❌ /bookings/services endpoint failed: ${response.status}`, 'error');
+                    log(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+                }
+            } catch (error) {
+                log(`❌ Error connecting to /bookings/services: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSlots() {
+            log('🔍 Testing /bookings/available-slots endpoint...');
+            try {
+                const serviceId = 'haircut';
+                const date = new Date().toISOString().split('T')[0];
+                const response = await fetch(`${API_BASE_URL}/bookings/available-slots/${serviceId}/${date}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ /bookings/available-slots endpoint working!', 'success');
+                    log(`Found ${data.data?.length || 0} available slots for ${serviceId} on ${date}`);
+                    log(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+                } else {
+                    log(`❌ /bookings/available-slots endpoint failed: ${response.status}`, 'error');
+                    log(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+                }
+            } catch (error) {
+                log(`❌ Error connecting to /bookings/available-slots: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAll() {
+            log('🚀 Testing all endpoints...');
+            await testConfig();
+            await testServices();
+            await testSlots();
+            log('✅ All tests completed!', 'success');
+        }
+
+        // Auto-run tests on page load
+        window.onload = function() {
+            log('🔍 Backend Connection Test Tool Ready');
+            log('Click buttons above to test different endpoints');
+        };
+    </script>
+</body>
+</html> 

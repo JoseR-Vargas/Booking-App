@@ -21,6 +21,15 @@ export class AppController {
     res.sendFile(join(process.cwd(), 'public', 'admin.html'));
   }
 
+  @Get('health')
+  getHealth() {
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+    };
+  }
+
   @Get('config')
   getConfig() {
     return {

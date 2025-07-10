@@ -102,7 +102,7 @@
                     <li class="nav-item"><a class="nav-link" href="#nosotros">Nosotros</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
                     <li class="nav-item">
-                        <button class="btn btn-primary-custom text-white ms-2" id="btnReservarNav" onclick="testModal()">
+                        <button class="btn btn-primary-custom text-white ms-2" id="btnReservarNav" onclick="openModalSimple()">
                             <i class="fas fa-calendar-alt me-2"></i>Reservar Cita
                         </button>
                     </li>
@@ -130,7 +130,7 @@
                         Reserva tu cita en línea de forma rápida y segura.
                     </p>
                     <div class="d-flex flex-wrap gap-3 mb-4">
-                        <button class="btn btn-light btn-lg px-4 py-3" id="btnReservarHero" onclick="testModal()">
+                        <button class="btn btn-light btn-lg px-4 py-3" id="btnReservarHero" onclick="openModalSimple()">
                             <i class="fas fa-calendar-check me-2"></i>Reservar Ahora
                         </button>
                         <a href="tel:+573001234567" class="btn btn-outline-light btn-lg px-4 py-3">
@@ -275,7 +275,7 @@
                         </div>
                         <hr>
                         <div class="text-center">
-                            <button class="btn btn-primary-custom w-100" id="btnReservarContacto" onclick="testModal()">
+                            <button class="btn btn-primary-custom w-100" id="btnReservarContacto" onclick="openModalSimple()">
                                 <i class="fas fa-calendar-plus me-2"></i>Reservar Cita
                             </button>
                         </div>
@@ -471,11 +471,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     
-    <script>
-        // Estado global del modal
-        let currentStep = 1;
-        let selectedService = null;
-        let modalInitialized = false;
+    <!-- JavaScript integrado eliminado para usar app.js externo -->
         
         // Función para abrir el modal de reserva
         function testModal() {
@@ -1112,5 +1108,9 @@
         // Insertar estilos adicionales en el head
         document.head.insertAdjacentHTML('beforeend', additionalStyles);
     </script>
+    -->
+    
+    <!-- Cargar el archivo JavaScript principal -->
+    <script src="js/app.js"></script>
 </body>
 </html> 

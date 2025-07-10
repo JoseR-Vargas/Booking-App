@@ -21,7 +21,7 @@ import configuration from './config/configuration';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
-      exclude: ['/api*', '/bookings*'],
+      exclude: ['/api*', '/bookings*', '/health*', '/health'],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
